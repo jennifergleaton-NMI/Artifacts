@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OneX Partner Program — Q3 2026 FE Progress Tracker</title>
+<style>
+  :root{
+    --navy:#32165D;
+    --green:#4BFFB4;
+    --bg:#f5f3fa;
+    --card:#ffffff;
+    --ink:#1f1533;
+    --muted:#6b6280;
+    --border:#e5e0f0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; padding:0;}
+  body{
+    font-family:'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:28px 32px 22px;
+  }
+  header h1{
+    margin:0 0 4px;
+    font-size:22px;
+    font-weight:700;
+    display:flex; align-items:center; gap:10px;
+    text-wrap:balance;
+  }
+  header h1 .bar{
+    width:6px; height:22px; background:var(--green); border-radius:3px; display:inline-block; flex:none;
+  }
+  header p{ margin:0; color:#cbb9ea; font-size:13px; }
+  .summary-strip{
+    display:flex; gap:14px; padding:18px 32px; flex-wrap:wrap;
+    background:#fff; border-bottom:1px solid var(--border);
+  }
+  .stat{
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:12px 18px; min-width:130px; flex:1;
+  }
+  .stat .num{ font-size:22px; font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; }
+  .stat .lbl{ font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-top:2px;}
+  .stat .num.green{ color:#0a9a63; }
+  .controls{ display:flex; gap:8px; padding:16px 32px 0; flex-wrap:wrap; align-items:center; }
+  .tab{
+    padding:7px 16px; border-radius:20px; border:1px solid var(--border);
+    background:#fff; cursor:pointer; font-size:13px; font-weight:600; color:var(--muted); transition:.15s;
+  }
+  .tab.active{ background:var(--navy); color:#fff; border-color:var(--navy); }
+  .tab:hover:not(.active){ border-color:var(--navy); color:var(--navy); }
+  .tab:focus-visible{ outline:2px solid var(--navy); outline-offset:2px; }
+  .search{
+    margin-left:auto; padding:7px 14px; border-radius:20px; border:1px solid var(--border);
+    font-size:13px; min-width:220px; flex:1 1 220px; max-width:320px;
+  }
+  .search:focus-visible{ outline:2px solid var(--navy); outline-offset:1px; border-color:var(--navy); }
+  main{ padding:18px 32px 40px; }
+  .table-wrap{ width:100%; overflow-x:auto; border-radius:12px; box-shadow:0 1px 3px rgba(50,22,93,0.06); }
+  table{ width:100%; border-collapse:collapse; background:#fff; min-width:860px;}
+  thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--muted); padding:12px 14px; border-bottom:2px solid var(--border); cursor:pointer; user-select:none;
+    background:#faf9fd; white-space:nowrap;
+  }
+  thead th:hover{ color:var(--navy); }
+  tbody td{ padding:12px 14px; border-bottom:1px solid var(--border); font-size:13.5px; vertical-align:middle;}
+  tbody tr:hover{ background:#fbf9ff; }
+  .key{ font-weight:700; color:var(--navy); white-space:nowrap; }
+  .proj-pill{
+    display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:5px;
+    margin-right:6px; color:#fff;
+  }
+  .proj-PTX4{ background:#5b3a9e; }
+  .proj-SUP4{ background:#1a7fb0; }
+  .proj-AMT4{ background:#b0561a; }
+  .proj-AMT4P1{ background:#8a1f5e; }
+  .status-pill{
+    display:inline-block; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap;
+  }
+  .status-Accepted{ background:#dcf6ea; color:#0a9a63; }
+  .status-In-Progress{ background:#fff2d6; color:#b8790a; }
+  .status-Backlog{ background:#ece9f5; color:#6b5b95; }
+  .status-Canceled{ background:#fbe1e4; color:#c0293d; }
+  .status-Ready-for-UAT{ background:#dbeafe; color:#1e5fae; }
+  .sprint-chip{
+    display:inline-block; font-size:11px; font-weight:600; background:#eef1ff; color:#3949ab;
+    padding:2px 7px; border-radius:5px; margin:1px 3px 1px 0;
+  }
+  .no-sprint{ color:var(--muted); font-size:12px; font-style:italic; }
+  .bar-track{
+    width:120px; height:8px; background:#ece9f5; border-radius:5px; overflow:hidden; display:inline-block; vertical-align:middle; margin-right:8px;
+  }
+  .bar-fill{ height:100%; border-radius:5px; background: linear-gradient(90deg, var(--green), #0a9a63); }
+  .pct-cell{ display:flex; align-items:center; white-space:nowrap; font-weight:700; font-variant-numeric:tabular-nums; }
+  .owner{ color:var(--muted); font-size:12.5px; }
+  .sp-note{ font-size:11.5px; color:var(--muted); }
+  .num-cell{ font-variant-numeric:tabular-nums; }
+  footer{ padding:14px 32px 30px; color:var(--muted); font-size:11.5px; line-height:1.5; }
+  @media (max-width:640px){
+    header,.summary-strip,.controls,main,footer{ padding-left:18px; padding-right:18px; }
+    .search{ margin-left:0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="bar"></span>OneX Partner Program — Q3 2026 FE Progress Tracker</h1>
+  <p>Feature Epics (FEs) across PTX4, SUP4, and AMT4, plus AMT4: Pod 1 stories · Live from Jira · Refreshed for July 23, 2026</p>
+</header>
+
+<div class="summary-strip" id="summaryStrip"></div>
+
+<div class="controls">
+  <div class="tab active" data-filter="all" tabindex="0" role="button">All Projects</div>
+  <div class="tab" data-filter="PTX4" tabindex="0" role="button">PTX4 (18)</div>
+  <div class="tab" data-filter="SUP4" tabindex="0" role="button">SUP4 (2)</div>
+  <div class="tab" data-filter="AMT4" tabindex="0" role="button">AMT4 (1)</div>
+  <div class="tab" data-filter="AMT4P1" tabindex="0" role="button">AMT4: Pod 1 (20)</div>
+  <input class="search" id="searchBox" placeholder="Search epic key or name…" aria-label="Search epic key or name">
+</div>
+
+<main>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="key">Jira Key</th>
+          <th data-sort="summary">Epic / Story</th>
+          <th data-sort="owner">Owner</th>
+          <th data-sort="epic_status">Status</th>
+          <th data-sort="sprints">Sprint(s)</th>
+          <th data-sort="pct">% Complete</th>
+          <th data-sort="total_sp">Story Points</th>
+          <th data-sort="total_issues">Issues</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  % Complete = accepted story points ÷ total story points (canceled issues excluded from both). Sprint numbers reflect all sprints touched by an epic's child issues, pulled from Jira's Sprint field. Data sourced live from NMI Jira (PTX4FE / SUP4FE / AMT4FE / AMT4P1) — not the Smartsheet YTD tracker, since several Q3 epics aren't yet SP-groomed there.
+  <br><br>
+  <strong>AMT4: Pod 1</strong> is its own Jira project (not epics under AMT4FE) covering the MC v1 → New Partner Portal (NPP) migration for Residuals, Processors, Integrations, My Merchants, and Payments &amp; Invoices. These are individual stories, not epics — only 1 of 20 is SP-sized so far (AMT4P1-6, 5 SP) and only 1 has a linked parent epic (AMT4P1-8 → AMT4FE-120). % Complete for these rows reflects per-story Accepted/Not-Accepted status rather than an SP rollup, and sprint assignment isn't yet populated for any item.
+</footer>
+
+<script>
+const data = [{"project": "PTX4", "key": "PTX4FE-55", "summary": "PartnerX - New Dev Onboarding", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 18.0, "done_sp": 5.0, "pct": 27.8, "total_issues": 3, "done_issues": 2, "sprints": [82, 83]}, {"project": "PTX4", "key": "PTX4FE-56", "summary": "Unified PartnerX - Partner Portal Optimizations/Fixes, and Pivot Rework", "owner": "Givon Conner", "epic_status": "Accepted", "total_sp": 237.0, "done_sp": 87.0, "pct": 36.7, "total_issues": 35, "done_issues": 12, "sprints": [85, 86, 87, 88, 89]}, {"project": "PTX4", "key": "PTX4FE-57", "summary": "Unified PartnerX - Extensions Research & Progress [STRETCH]", "owner": "Givon Conner", "epic_status": "Accepted", "total_sp": 10.0, "done_sp": 10.0, "pct": 100.0, "total_issues": 2, "done_issues": 2, "sprints": [85, 86]}, {"project": "PTX4", "key": "PTX4FE-58", "summary": "Unified PartnerX - Support", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 54.0, "done_sp": 5.0, "pct": 9.3, "total_issues": 7, "done_issues": 1, "sprints": [89, 90, 91, 92]}, {"project": "PTX4", "key": "PTX4FE-59", "summary": "Unified PartnerX - Developer", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 38.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 7, "done_issues": 0, "sprints": [91, 92, 95]}, {"project": "PTX4", "key": "PTX4FE-60", "summary": "Unified PartnerX - Value Added Solutions (Extensions)", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 18.0, "done_sp": 13.0, "pct": 72.2, "total_issues": 2, "done_issues": 1, "sprints": [89, 90]}, {"project": "PTX4", "key": "PTX4FE-61", "summary": "Unified PartnerX - Administration MVP", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 24.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 4, "done_issues": 0, "sprints": [89, 91]}, {"project": "PTX4", "key": "PTX4FE-62", "summary": "Unified PartnerX - User Behavior Tracking", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 32.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 4, "done_issues": 0, "sprints": [91, 92, 93]}, {"project": "PTX4", "key": "PTX4FE-63", "summary": "Unified PartnerX - User Management & Permissions", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 16.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 2, "done_issues": 0, "sprints": [90]}, {"project": "PTX4", "key": "PTX4FE-64", "summary": "Unified PartnerX - Partner Portal Foundation Enablement", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 166.0, "done_sp": 44.0, "pct": 26.5, "total_issues": 29, "done_issues": 9, "sprints": [89, 90, 91, 92, 93, 94, 95]}, {"project": "PTX4", "key": "PTX4FE-65", "summary": "Unified PartnerX - MC v1 Porting (Wave 1)", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 59.0, "done_sp": 3.0, "pct": 5.1, "total_issues": 11, "done_issues": 1, "sprints": [89, 90, 91, 93, 94]}, {"project": "PTX4", "key": "PTX4FE-66", "summary": "Unified PartnerX - Partner Portal Cleanup & Maintenance", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 165.0, "done_sp": 37.0, "pct": 22.4, "total_issues": 27, "done_issues": 9, "sprints": [89, 90, 91, 92, 93, 95]}, {"project": "PTX4", "key": "PTX4FE-67", "summary": "Unified PartnerX - Partner Portal Cutover", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 19.0, "done_sp": 1.0, "pct": 5.3, "total_issues": 6, "done_issues": 1, "sprints": [90, 91, 93, 94, 95]}, {"project": "PTX4", "key": "PTX4FE-68", "summary": "Unified PartnerX - Natural Language Processing ADR, POC, and Research", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 45.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 4, "done_issues": 0, "sprints": [90, 92, 95]}, {"project": "PTX4", "key": "PTX4FE-69", "summary": "Unified PartnerX - Groups ADR, POC, and Research", "owner": "Givon Conner", "epic_status": "Backlog", "total_sp": 60.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 5, "done_issues": 0, "sprints": [92, 93, 94, 95]}, {"project": "PTX4", "key": "PTX4FE-70", "summary": "Unified PartnerX - Unified Transactions Schema ADR, POC, and Research", "owner": "Givon Conner", "epic_status": "Backlog", "total_sp": 59.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 6, "done_issues": 0, "sprints": [91, 92, 93, 94, 95]}, {"project": "PTX4", "key": "PTX4FE-71", "summary": "Unified PartnerX - Partner Portal Monitoring & Logging", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 9.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 3, "done_issues": 0, "sprints": [91, 92]}, {"project": "PTX4", "key": "PTX4FE-72", "summary": "Unified PartnerX - NMI Payments Completion", "owner": "Givon Conner", "epic_status": "In Progress", "total_sp": 45.0, "done_sp": 8.0, "pct": 17.8, "total_issues": 9, "done_issues": 2, "sprints": [89, 90, 91, 92]}, {"project": "SUP4", "key": "SUP4FE-64", "summary": "MSU4 - Unified PartnerX - Support changes", "owner": "Sergey Peredelskyi", "epic_status": "In Progress", "total_sp": 27.0, "done_sp": 19.0, "pct": 70.4, "total_issues": 13, "done_issues": 8, "sprints": [90, 91]}, {"project": "SUP4", "key": "SUP4FE-89", "summary": "MSU4 - Unified PartnerX - Placeholder (Reserve Capacity)", "owner": "Sergey Peredelskyi", "epic_status": "In Progress", "total_sp": 98.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 6, "done_issues": 0, "sprints": [91, 95]}, {"project": "AMT4", "key": "AMT4FE-69", "summary": "CRM - Unified PartnerX - Leads", "owner": "Firat Ozak", "epic_status": "Accepted", "total_sp": 51.0, "done_sp": 51.0, "pct": 100.0, "total_issues": 18, "done_issues": 18, "sprints": [84, 85, 86]}, {"project": "AMT4P1", "key": "AMT4P1-6", "summary": "[NPP][Residuals] Line Items Transition to the New Partner Portal", "owner": "Aleksey Bobryshev", "epic_status": "Ready for UAT", "total_sp": 5.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-7", "summary": "[NPP][Processors] Processor Tab Upscale and Transition to the New Partner Portal", "owner": "Yurii Ludchak", "epic_status": "In Progress", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-8", "summary": "[NPP][Integrations] Authorize.Net Reseller Credentials", "owner": "Yurii Ludchak", "epic_status": "Accepted", "total_sp": 0.0, "done_sp": 0.0, "pct": 100.0, "total_issues": 1, "done_issues": 1, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-9", "summary": "[NPP][Integrations] NMI - Boarding & Reporting", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-10", "summary": "[NPP][Integrations] Lead Data Sharing", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-11", "summary": "[NPP][Integrations] Merchant Data Sharing", "owner": "Sergey Gondrya", "epic_status": "In Progress", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-12", "summary": "[NPP][My Merchants] Merchant Management", "owner": "Yurii Ludchak", "epic_status": "In Progress", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-13", "summary": "[NPP][Payments & Invoices] Credit Card Profiles", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-14", "summary": "[NPP][Payments & Invoices] Invoice Templates", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-15", "summary": "[NPP][Processors] Account Status Tab", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-16", "summary": "[NPP][Residuals] Residuals", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-17", "summary": "[NPP][Residuals] Residuals Analytics", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-18", "summary": "[NPP][Residuals] Residuals Import", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-19", "summary": "[NPP][Residuals] Residuals Line Items", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-20", "summary": "[NPP][Residuals] Residuals Dynamic Splits", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-21", "summary": "[NPP][Residuals] Residuals Templates", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-22", "summary": "[NPP][Residuals] Residuals Dynamic Line Items", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-23", "summary": "[NPP][Residuals] Residuals Dynamic Splits (2)", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-24", "summary": "[NPP][Residuals] Residuals Conditional Splits", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}, {"project": "AMT4P1", "key": "AMT4P1-25", "summary": "[NPP][Residuals] Residuals Column Configuration", "owner": "Unassigned", "epic_status": "Backlog", "total_sp": 0.0, "done_sp": 0.0, "pct": 0.0, "total_issues": 1, "done_issues": 0, "sprints": []}]
+;
+
+let sortKey = 'key', sortDir = 1, currentFilter = 'all', searchTerm = '';
+
+function statusClass(s){ return 'status-' + s.replace(/\s+/g,'-'); }
+
+function renderSummary(){
+  const totalSP = data.reduce((a,d)=>a+d.total_sp,0);
+  const doneSP = data.reduce((a,d)=>a+d.done_sp,0);
+  const totalIssues = data.reduce((a,d)=>a+d.total_issues,0);
+  const doneIssues = data.reduce((a,d)=>a+d.done_issues,0);
+  const pct = totalSP ? (doneSP/totalSP*100) : 0;
+  const allSprints = [...new Set(data.flatMap(d=>d.sprints))].sort((a,b)=>a-b);
+  const strip = document.getElementById('summaryStrip');
+  strip.innerHTML = `
+    <div class="stat"><div class="num">${data.length}</div><div class="lbl">Q3 Items Tracked</div></div>
+    <div class="stat"><div class="num green">${pct.toFixed(1)}%</div><div class="lbl">Overall % Complete (SP)</div></div>
+    <div class="stat"><div class="num">${doneSP}/${totalSP}</div><div class="lbl">Story Points Done / Total</div></div>
+    <div class="stat"><div class="num">${doneIssues}/${totalIssues}</div><div class="lbl">Issues Accepted / Total</div></div>
+    <div class="stat"><div class="num">${allSprints[0]}–${allSprints[allSprints.length-1]}</div><div class="lbl">Sprint Range in Play</div></div>
+  `;
+}
+
+function render(){
+  let rows = data.filter(d => currentFilter==='all' || d.project===currentFilter);
+  if(searchTerm){
+    const t = searchTerm.toLowerCase();
+    rows = rows.filter(d => d.key.toLowerCase().includes(t) || d.summary.toLowerCase().includes(t));
+  }
+  rows.sort((a,b)=>{
+    let av=a[sortKey], bv=b[sortKey];
+    if(sortKey==='sprints'){ av=a.sprints.length?a.sprints[0]:9999; bv=b.sprints.length?b.sprints[0]:9999; }
+    if(typeof av==='string'){ return av.localeCompare(bv)*sortDir; }
+    return (av-bv)*sortDir;
+  });
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = rows.map(d=>`
+    <tr>
+      <td class="key"><span class="proj-pill proj-${d.project}">${d.project}</span>${d.key}</td>
+      <td>${d.summary}</td>
+      <td class="owner">${d.owner}</td>
+      <td><span class="status-pill ${statusClass(d.epic_status)}">${d.epic_status}</span></td>
+      <td>${ d.sprints.length ? d.sprints.map(s=>`<span class="sprint-chip">Sprint ${s}</span>`).join('') : '<span class="no-sprint">unassigned</span>' }</td>
+      <td>
+        <div class="pct-cell">
+          <span class="bar-track"><span class="bar-fill" style="width:${d.pct}%"></span></span>
+          ${d.pct.toFixed(1)}%
+        </div>
+      </td>
+      <td class="num-cell">${d.done_sp} / ${d.total_sp}<div class="sp-note">SP done / total</div></td>
+      <td class="num-cell">${d.done_issues} / ${d.total_issues}</td>
+    </tr>
+  `).join('');
+}
+
+function activateTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  currentFilter = tab.dataset.filter;
+  render();
+}
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>activateTab(tab));
+  tab.addEventListener('keydown', e=>{
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); activateTab(tab); }
+  });
+});
+
+document.getElementById('searchBox').addEventListener('input', e=>{
+  searchTerm = e.target.value;
+  render();
+});
+
+document.querySelectorAll('th[data-sort]').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const key = th.dataset.sort;
+    if(sortKey===key){ sortDir *= -1; } else { sortKey = key; sortDir = 1; }
+    render();
+  });
+});
+
+renderSummary();
+render();
+</script>
+
+</body>
+</html>
